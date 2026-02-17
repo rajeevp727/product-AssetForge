@@ -19,6 +19,9 @@
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public int SortOrder { get; set; }
+        public long? Userbase { get; set; }
+        public decimal? Revenue { get; set; }
+
 
     }
 }
