@@ -1,0 +1,77 @@
+.page {
+  padding: 35px;
+  background: #f4f6fa;
+  min-height: 100vh;
+}
+
+h1 {
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.table-container {
+  background: white;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.07);
+}
+
+.brands-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.brands-table thead {
+  background: #0f172a;
+  color: white;
+  position: sticky;
+  top: 0;
+}
+
+.brands-table th,
+.brands-table td {
+  padding: 14px 18px;
+  text-align: left;
+}
+
+.brands-table tbody tr {
+  border-bottom: 1px solid #eee;
+  transition: background 0.15s;
+}
+
+.brands-table tbody tr:nth-child(even) {
+  background: #fafafa;
+}
+
+.brands-table tbody tr:hover {
+  background: #eef4ff;
+}
+
+.brand-name {
+  font-weight: 600;
+}
+
+.revenue {
+  font-weight: 600;
+  color: #0b8457;
+}
+
+a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.state {
+  height: 70vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #777;
+  font-size: 18px;
+}
