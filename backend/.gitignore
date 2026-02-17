@@ -1,0 +1,26 @@
+# Build folders
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Rider
+.idea/
+
+# Logs
+*.log
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# NuGet
+packages/
+*.nupkg
+
+# Publish
+publish/
+out/
