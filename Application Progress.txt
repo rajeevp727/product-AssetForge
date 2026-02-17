@@ -5,3 +5,4 @@ TODO:
 1. Have to deploy to assetforge.in
 2. Implement Go back to AssetForge from brand's page, once back, show the CTA "Buy this domain" that redirects to google form, on submit, says the text, 
 "Thank you for reaching out to Rajeev's Pvt. Ltd., well get back to you in 2 to 3 business days!"
+3. Implement JWT authentication
