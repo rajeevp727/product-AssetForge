@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./Auth.css";
 import api from "../../api/axios";
 import { useAuth } from "./AuthContext";
@@ -11,13 +11,17 @@ const defaultRoles = [
 
 export default function Auth() {
     const { login } = useAuth();
-
+    const emailRef = useRef(null);
     const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [roles, setRoles] = useState([]);
     const [selectedRole, setSelectedRole] = useState(1);
     const [error, setError] = useState("");
+
+    useEffect(() => {
+        if (emailRef.current) emailRef.current.focus();
+    }, [isLogin]);
 
     useEffect(() => {
         api.get("/meta/registration-roles")
@@ -42,6 +46,9 @@ export default function Auth() {
                 const res = await api.post("/Auth/login", { email, password });
                 login(res.data.token);
                 window.location.href = "/";
+                setIsLogin(true);
+                setEmail("");
+                setPassword("");
             } else {
                 await api.post("/Auth/register", {
                     email,
@@ -77,6 +84,7 @@ export default function Auth() {
 
                         <input
                             placeholder="Email address"
+                            ref={emailRef}
                             value={email}
                             onChange={e => setEmail(e.target.value)}
                         />

@@ -3,5 +3,6 @@
     public interface IJwtRepository
     {
         string GenerateToken(Guid id, string? email, int role);
+        string GenerateRefreshToken();
     }
 }

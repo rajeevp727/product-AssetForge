@@ -22,6 +22,8 @@ namespace AssetForge.Domain.Entities
         public DateTime? UpdatedAt { get; set; }
         public bool HasVisitedFromDomain { get; set; }
         public bool HasSeenCta { get; set; }
+        public string? RefreshToken { get; set; }
+        public DateTime? RefreshTokenExpiryTime { get; set; }
 
 
     }

@@ -1,11 +1,11 @@
 ﻿using AssetForge.Application.Interfaces.Repositories;
 using AssetForge.Domain.Entities;
 using AssetForge.Domain.Enums;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace AssetForge.Infrastructure.Repositories
@@ -38,11 +38,20 @@ namespace AssetForge.Infrastructure.Repositories
                 audience: _settings.Audience,
                 claims: claims,
                 notBefore: DateTime.UtcNow,
-                expires: DateTime.UtcNow.AddHours(4),
+                expires: DateTime.UtcNow.AddMinutes(1), // 1 mins
                 signingCredentials: creds
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+
+        public string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[64];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
         }
 
     }

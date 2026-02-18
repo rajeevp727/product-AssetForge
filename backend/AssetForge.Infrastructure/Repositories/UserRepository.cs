@@ -30,13 +30,16 @@ namespace AssetForge.Infrastructure.Repositories
 
         public async Task UpdateUserAsync(Users user)
         {
-            var exists = await GetByIdAsync(user.Id);
+            var exists = await _context.User.FirstOrDefaultAsync(x => x.Id == user.Id);
             if (exists == null) throw new Exception("User not Found");
 
             exists.Role = user.Role;
             exists.RequestedRole = user.RequestedRole;
-            exists.LastLogin = user.LastLogin;
-            exists.UpdatedAt = user.UpdatedAt;
+            exists.LastLogin = DateTime.UtcNow;
+            exists.UpdatedAt = DateTime.UtcNow;
+
+            exists.RefreshToken = user.RefreshToken;
+            exists.RefreshTokenExpiryTime = user.RefreshTokenExpiryTime;
 
             await _context.SaveChangesAsync();
         }
