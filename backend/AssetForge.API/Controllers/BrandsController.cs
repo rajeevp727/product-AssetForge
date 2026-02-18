@@ -1,4 +1,6 @@
 ﻿using AssetForge.Application.Features;
+using AssetForge.Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AssetForge.API.Controllers
@@ -13,6 +15,7 @@ namespace AssetForge.API.Controllers
             _handler = handler;
         }
 
+        [Authorize(Roles = "Admin, Buyer")]
         [HttpGet("GetAllBrands")]
         public async Task<IActionResult> GetAllBrands()
         {
