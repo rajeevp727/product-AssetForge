@@ -21,9 +21,10 @@ export default function Navbar() {
                             Login / Signup
                         </Link>
                     ) : (
-                        <button className="nav-btn" onClick={logout}>
+                        <button className="logout-btn" onClick={logout}>
                             Logout
                         </button>
+
                     )
                 )}
 

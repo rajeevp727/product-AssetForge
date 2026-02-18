@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import "./Auth.css";
 import api from "../../api/axios";
 import { useAuth } from "./AuthContext";
+import { useTheme } from "../../ThemeContext";
 
 const defaultRoles = [
     { id: 1, name: "User" },
@@ -13,11 +14,12 @@ export default function Auth() {
     const { login } = useAuth();
     const emailRef = useRef(null);
     const [isLogin, setIsLogin] = useState(true);
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("rajeevp727@gmail.com");
+    const [password, setPassword] = useState("Pass123");
     const [roles, setRoles] = useState([]);
     const [selectedRole, setSelectedRole] = useState(1);
     const [error, setError] = useState("");
+    const { theme, toggleTheme } = useTheme();
 
     useEffect(() => {
         if (emailRef.current) emailRef.current.focus();
@@ -66,6 +68,12 @@ export default function Auth() {
 
     return (
         <div className="auth-wrapper">
+            <div className="theme-toggle">
+                <button onClick={toggleTheme}>
+                    {theme === "dark" ? "🌙 Dark" : "☀️ Light"}
+                </button>
+            </div>
+
             <div className="auth-container">
 
                 <div className="left-panel">

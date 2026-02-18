@@ -11,3 +11,62 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+:root {
+    --bg: #0f172a;
+    --card: #111827;
+    --text: #e5e7eb;
+    --primary: #6366f1;
+    --border: #1f2937;
+}
+
+[data-theme="light"] {
+    --bg: #f4f6fb;
+    --card: #ffffff;
+    --text: #111827;
+    --primary: #4f46e5;
+    --border: #e5e7eb;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.auth-wrapper {
+    background: var(--bg);
+}
+
+.auth-container {
+    background: var(--card);
+    border: 1px solid var(--border);
+}
+
+.form input,
+.role-select {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+}
+
+.submit-btn,
+.switch-btn {
+    background: var(--primary);
+    color: white;
+}
+
+.theme-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.theme-toggle button {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+}
