@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import api from "../api/axios";
-import { formatCurrency, formatDate, formatUsers } from "../utils/formatters.js";
+import api from "../../api/axios.js";
+import { formatCurrency, formatDate, formatUsers } from "../../utils/formatters.js";
 import "./Dashboard.css";
 
 export default function Dashboard() {
