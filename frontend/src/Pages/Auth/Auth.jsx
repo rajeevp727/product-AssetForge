@@ -3,6 +3,12 @@ import "./Auth.css";
 import api from "../../api/axios";
 import { useAuth } from "./AuthContext";
 
+const defaultRoles = [
+    { id: 1, name: "User" },
+    { id: 0, name: "Admin" },
+    { id: 2, name: "Buyer" }
+];
+
 export default function Auth() {
     const { login } = useAuth();
 
@@ -15,9 +21,17 @@ export default function Auth() {
 
     useEffect(() => {
         api.get("/meta/registration-roles")
-            .then(res => setRoles(res.data))
-            .catch(() => {});
+            .then(res => {
+                if (res.data && res.data.length > 0)
+                    setRoles(res.data);
+                else
+                    setRoles(defaultRoles);
+            })
+            .catch(() => {
+                setRoles(defaultRoles);
+            });
     }, []);
+
 
     const submit = async (e) => {
         e.preventDefault();
@@ -80,9 +94,14 @@ export default function Auth() {
                                 value={selectedRole}
                                 onChange={e => setSelectedRole(Number(e.target.value))}
                             >
-                                {roles.map(r => (
-                                    <option key={r.id} value={r.id}>{r.name}</option>
-                                ))}
+                                {roles.length > 0
+                                    ? roles.map(r => (
+                                        <option key={r.id} value={r.id}>{r.name}</option>
+                                    ))
+                                    : defaultRoles.map(r => (
+                                        <option key={r.id} value={r.id}>{r.name}</option>
+                                    ))
+                                }
                             </select>
                         )}
 

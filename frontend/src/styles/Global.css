@@ -5,6 +5,11 @@
     font-family: "Segoe UI", Inter, system-ui, sans-serif;
 }
 
+/* FULL HEIGHT APP */
+html, body, #root {
+    height: 100%;
+}
+
 body {
     background: #0f172a;
     color: #e5e7eb;
@@ -34,6 +39,7 @@ a {
     flex-direction: column;
 }
 
+/* NORMAL APP PAGES ONLY */
 .page {
     max-width: 1200px;
     margin: auto;
