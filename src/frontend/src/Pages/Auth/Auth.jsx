@@ -52,32 +52,28 @@ export default function Auth() {
   const handleSubmit = async e => {
     e.preventDefault();
     setError("");
-
     try {
-
       if (isLogin) {
         // LOGIN
-        const res = await api.post("/Auth/login", { email, password });
-
+        const res = await api.post("Auth/login", { email, password });
         login(res.data.token, res.data.refreshToken);
-
         navigate("/", { replace: true });
       }
       else {
         // REGISTER
-        await api.post("/Auth/register", {
+        await api.post("Auth/register", {
           email,
           password,
           requestedRole: selectedRole
         });
-
         setIsLogin(true);
         setError("Account created. Please login.");
       }
 
     } catch (err) {
-      if(err?.response?.status === 401) setError("Invalid credentials");
-      else if(err?.response?.status === 400) setError("Email already in use");
+      console.error(err);
+      if (err?.response?.status === 401) setError("Invalid credentials");
+      else if (err?.response?.status === 400) setError("Email already in use");
       else setError(err?.response?.data?.error || "Operation failed");
     }
   };

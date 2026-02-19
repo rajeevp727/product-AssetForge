@@ -1,78 +1,8 @@
 import axios from "axios";
 
+console.log("API BASE URL =", process.env.REACT_APP_API_URL);
 const api = axios.create({
-  baseURL: "https://localhost:7099/api",
+  baseURL: process.env.REACT_APP_API_URL
 });
-
-let isRefreshing = false;
-let failedQueue = [];
-
-const processQueue = (error, token = null) => {
-  failedQueue.forEach(p => (error ? p.reject(error) : p.resolve(token)));
-  failedQueue = [];
-};
-
-api.interceptors.request.use(config => {
-  const token = localStorage.getItem("token");
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config.data;
-});
-
-api.interceptors.response.use(
-  res => res,
-  async err => {
-    const originalRequest = err.config;
-
-    if (err.response?.status === 401 && !originalRequest._retry) {
-
-      if (isRefreshing) {
-        return new Promise((resolve, reject) => {
-          failedQueue.push({ resolve, reject });
-        }).then(token => {
-          originalRequest.headers.Authorization = "Bearer " + token;
-          return api(originalRequest);
-        });
-      }
-
-      originalRequest._retry = true;
-      isRefreshing = true;
-
-      try {
-        const refreshResponse = await axios.post(
-          "https://localhost:7099/api/Auth/refresh-token",
-          {
-            accessToken: localStorage.getItem("token"),
-            refreshToken: localStorage.getItem("refreshToken")
-          }
-        );
-
-        const newToken = refreshResponse.data.token;
-        const newRefresh = refreshResponse.data.refreshToken;
-
-        localStorage.setItem("token", newToken);
-        localStorage.setItem("refreshToken", newRefresh);
-
-        api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
-
-        processQueue(null, newToken);
-        return api(originalRequest);
-
-      } catch (refreshError) {
-
-        processQueue(refreshError, null);
-
-        localStorage.clear();
-        window.dispatchEvent(new Event("auth:logout"));
-
-        return Promise.reject(refreshError);
-      }
-      finally {
-        isRefreshing = false;
-      }
-    }
-
-    return Promise.reject(err);
-  }
-);
-
+console.log("API BASE URL =", process.env.REACT_APP_API_URL);
 export default api;
