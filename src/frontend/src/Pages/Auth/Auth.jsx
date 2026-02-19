@@ -76,7 +76,6 @@ export default function Auth() {
       }
 
     } catch (err) {
-      debugger;
       if(err?.response?.status === 401) setError("Invalid credentials");
       else if(err?.response?.status === 400) setError("Email already in use");
       else setError(err?.response?.data?.error || "Operation failed");
