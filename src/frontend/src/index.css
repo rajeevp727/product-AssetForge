@@ -1,72 +1,16 @@
-body {
+* {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
-:root {
-    --bg: #0f172a;
-    --card: #111827;
-    --text: #e5e7eb;
-    --primary: #6366f1;
-    --border: #1f2937;
-}
-
-[data-theme="light"] {
-    --bg: #f4f6fb;
-    --card: #ffffff;
-    --text: #111827;
-    --primary: #4f46e5;
-    --border: #e5e7eb;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Inter, Segoe UI, system-ui, sans-serif;
 }
 
 body {
-    background: var(--bg);
-    color: var(--text);
-    transition: background 0.3s ease, color 0.3s ease;
+  background: #020617;
+  color: #e5e7eb;
 }
 
-.auth-wrapper {
-    background: var(--bg);
-}
-
-.auth-container {
-    background: var(--card);
-    border: 1px solid var(--border);
-}
-
-.form input,
-.role-select {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text);
-}
-
-.submit-btn,
-.switch-btn {
-    background: var(--primary);
-    color: white;
-}
-
-.theme-toggle {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-}
-
-.theme-toggle button {
-    background: var(--card);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 8px 14px;
-    border-radius: 10px;
-    cursor: pointer;
+a {
+  text-decoration: none;
+  color: inherit;
 }

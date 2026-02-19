@@ -1,31 +1,34 @@
 import { Link, useLocation } from "react-router-dom";
-import { useAuth } from "../Auth/AuthContext.jsx";
+import { useAuth } from "../Auth/AuthContext";
 import "./Navbar.css";
 
 export default function Navbar() {
-    const location = useLocation();
-    const { isAuthenticated, logout } = useAuth();
+  const location = useLocation();
+  const { isAuthenticated, logout } = useAuth();
 
-    const isAuthPage = location.pathname === "/auth";
+  const isAuthPage = location.pathname === "/auth";
 
-    return (
-        <div className="navbar">
-            <div className="logo">AssetForge</div>
+  return (
+    <header className="navbar">
 
-            <div className="nav-links">
+      <div className="nav-left">
+        <Link to="/" className="logo">AssetForge</Link>
+      </div>
 
-                {/* hide buttons on auth screen */}
-                {!isAuthPage && (
-                    !isAuthenticated ? (
-                        <Link className="primary-btn" to="/auth">
-                            Login / Signup
-                        </Link>
-                    ) : (
-                        <button onClick={logout}>Logout</button>
-                    )
-                )}
+      <div className="nav-right">
+        {!isAuthPage && (
+          !isAuthenticated ? (
+            <Link className="login-btn" to="/auth">
+              Login
+            </Link>
+          ) : (
+            <button className="logout-btn" onClick={logout}>
+              Logout
+            </button>
+          )
+        )}
+      </div>
 
-            </div>
-        </div>
-    );
+    </header>
+  );
 }

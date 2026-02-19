@@ -1,254 +1,100 @@
-/* ---------- APP LAYOUT ---------- */
-
-.layout {
-  background: #f1f5f9;
-  min-height: 100vh;
-  padding: 40px 20px;
-  /* display: flex; */
-  justify-content: center;
-}
-
 .page {
-  width: 100%;
-  max-width: 1500px;
+    padding: 40px;
+    color: white;
+    background: #020617;
+    min-height: calc(100vh - 64px);
 }
-
-/* ---------- HEADER ---------- */
 
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
 }
 
-h1 {
-  font-size: 30px;
-  font-weight: 700;
-  margin: 0;
-  letter-spacing: -.3px;
+.header h1 {
+    font-size: 28px;
+    font-weight: 700;
 }
 
 .subtitle {
-  color: #64748b;
-  margin-top: 6px;
-  font-size: 14px;
+    color: #94a3b8;
+    font-size: 14px;
 }
 
 .count-badge {
-  background: #111827;
-  color: white;
-  padding: 10px 18px;
-  border-radius: 999px;
-  font-weight: 600;
-  font-size: 14px;
+    background: #1e293b;
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-weight: 600;
 }
 
-/* ---------- CARD ---------- */
-
+/* CARD */
 .card {
-  background: white;
-  border-radius: 20px;
-  box-shadow: 0 15px 40px rgba(0,0,0,.08);
-  overflow: hidden;
+    background: #020617;
+    border: 1px solid #1e293b;
+    border-radius: 14px;
+    overflow: hidden;
 }
 
-/* ---------- TABLE ---------- */
-
+/* TABLE */
 .brands-table {
-  width: 100%;
-  border-collapse: collapse;
+    width: 100%;
+    border-collapse: collapse;
 }
 
 .brands-table thead {
-  background: #0f172a;
+    background: #020617;
+    border-bottom: 1px solid #1e293b;
 }
 
 .brands-table th {
-  color: #e5e7eb;
-  font-size: 12px;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  font-weight: 600;
-  padding: 18px 22px;
+    padding: 16px;
+    text-align: left;
+    font-weight: 600;
+    color: #94a3b8;
 }
 
 .brands-table td {
-  padding: 18px 22px;
-  border-bottom: 1px solid #f1f5f9;
-}
-
-.brands-table tbody tr {
-  transition: all .18s ease;
+    padding: 18px 16px;
+    border-bottom: 1px solid #0f172a;
 }
 
 .brands-table tbody tr:hover {
-  background: #f8fafc;
-  transform: scale(1.002);
+    background: rgba(59,130,246,.08);
+    transition: .2s;
 }
 
-/* ---------- BRAND CELL ---------- */
-
-.brand-cell {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.logo-circle {
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(135deg,#2563eb,#1d4ed8);
-  color: white;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 15px;
-}
-
-.brand-text .name {
-  font-weight: 600;
-  color: #111827;
-}
-
-.muted {
-  color: #94a3b8;
-  font-size: 12px;
-}
-
-/* ---------- DATA FORMATTING ---------- */
-
-.revenue {
-  font-weight: 600;
-  color: #059669;
-}
-
-/* ---------- WEBSITE BUTTON ---------- */
-
+/* LINKS */
 .visit-btn {
-  background: #eff6ff;
-  color: #1d4ed8;
-  padding: 8px 14px;
-  border-radius: 8px;
-  font-weight: 600;
-  text-decoration: none;
-  font-size: 13px;
-  transition: all .15s ease;
-  display: inline-block;
+    color: #60a5fa;
+    text-decoration: none;
+    font-weight: 500;
 }
 
 .visit-btn:hover {
-  background: #2563eb;
-  color: white;
+    text-decoration: underline;
+}
+.dashboard {
+  padding: 24px 40px;
+  color: #e5e7eb;
 }
 
-/* ---------- STATES ---------- */
-
-.center-state {
-  height: 60vh;
+/* HEADER */
+.dashboard-header {
   display: flex;
-  justify-content: center;
   align-items: center;
-  font-size: 18px;
-  color: #64748b;
+  justify-content: space-between;
+  margin-bottom: 24px;
 }
 
-.error {
-  color: #dc2626;
+.dashboard-header h1 {
+  font-size: 28px;
+  font-weight: 600;
 }
 
-/* Center only table body content */
-.brands-table tbody td {
-  text-align: center;
-  vertical-align: middle;
-}
-
-/* Keep brand column nicely aligned */
-.brands-table tbody td:first-child {
-  text-align: left;
-}
-.brand-cell {
-  justify-content: center;
-}
-
-.brands-table tbody td:first-child .brand-cell {
-  justify-content: flex-start;
-}
-
-/* Website column left aligned */
-.brands-table tbody td:last-child {
-  text-align: left;
-}
-
-
-.brands-table tbody td:last-child .visit-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.nowrap{
-  white-space: nowrap;
-}
-
-/* horizontal table scroll */
-.table-scroll {
-  width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-}
-
-/* keep table natural width */
-.brands-table {
-  min-width: 1000px; /* adjust based on columns */
-}
-
-/* smooth scrollbar (optional nice UI) */
-.table-scroll::-webkit-scrollbar {
-  height: 10px;
-}
-
-.table-scroll::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.table-scroll::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 999px;
-}
-
-.table-scroll::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-.sortable {
-  cursor: pointer;
-  user-select: none;
-  transition: opacity 0.2s;
-}
-
-.sortable:hover {
-  opacity: 0.75;
-}
-/* page takes full viewport */
-.full-height {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* main content grows */
-.page {
-  flex: 1;
-}
-
-/* footer sticks to bottom */
-.app-footer {
-  text-align: center;
-  padding: 14px;
-  background: #0f172a;
-  color: #cbd5e1;
-  font-size: 13px;
-  border-top: 1px solid #1e293b;
+/* ERROR */
+.error-text {
+  color: #f87171;
+  margin-bottom: 12px;
 }

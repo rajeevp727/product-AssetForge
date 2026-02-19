@@ -1,76 +1,51 @@
 .navbar {
-    height: 64px;
-    background: #020617;
-    border-bottom: 1px solid #1e293b;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 28px;
+  height: 64px;
+  background: linear-gradient(90deg, #020617, #020617cc);
+  border-bottom: 1px solid #1e293b;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;   /* ⭐ pushes left & right apart */
+
+  padding: 0 28px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+/* LEFT SIDE */
+.nav-left {
+  display: flex;
+  align-items: center;
 }
 
 .logo {
-    font-weight: 700;
-    font-size: 22px;
-    color: #38bdf8;
-    letter-spacing: 0.5px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #60a5fa;
+  text-decoration: none;
+  letter-spacing: .5px;
 }
 
-.nav-links {
-    display: flex;
-    gap: 18px;
-    align-items: center;
+/* RIGHT SIDE */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
-.nav-btn {
-    padding: 8px 14px;
-    border-radius: 8px;
-    background: #1e293b;
-    transition: 0.2s;
+/* BUTTONS */
+.logout-btn, .login-btn {
+  background: #2563eb;
+  border: none;
+  color: white;
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: .2s;
+  text-decoration: none;
 }
 
-.nav-btn:hover {
-    background: #334155;
-}
-
-.primary-btn {
-    /* background: #38bdf8; */
-    color: white;
-    font-weight: 600;
-}
-
-.primary-btn:hover {
-    background: #0ea5e9;
-}
-
-.logout-btn {
-    background: transparent;
-    color: var(--text);
-    border: 1px solid var(--border);
-    padding: 8px 18px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all .25s ease;
-}
-
-/* hover */
-.logout-btn:hover {
-    background: #ef4444;
-    border-color: #ef4444;
-    color: white;
-}
-
-/* dark mode contrast fix */
-[data-theme="dark"] .logout-btn {
-    border-color: #374151;
-}
-
-/* light mode contrast fix */
-[data-theme="light"] .logout-btn {
-    border-color: #d1d5db;
-}
-
-.navbar {
-    background: var(--card);
-    border-bottom: 1px solid var(--border);
+.logout-btn:hover, .login-btn:hover {
+  background: #1d4ed8;
 }

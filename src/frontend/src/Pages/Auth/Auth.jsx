@@ -1,110 +1,153 @@
-import { useState, useEffect, useRef } from "react";
-import "./Auth.css";
-import api from "../../api/axios";
-import { useAuth } from "./AuthContext";
-import { useTheme } from "../../ThemeContext";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "./AuthContext";
+import api from "../../api/axios";
+import "./Auth.css";
 
-
-const defaultRoles = [
-    { id: 1, name: "User" },
-    { id: 0, name: "Admin" },
-    { id: 2, name: "Buyer" }
+const fallbackRoles = [
+  { id: 0, name: "Admin" },
+  { id: 1, name: "User" },
+  { id: 2, name: "Buyer" }
 ];
 
 export default function Auth() {
-    const { login } = useAuth();
-    const emailRef = useRef(null);
-    const [isLogin, setIsLogin] = useState(true);
-    const [email, setEmail] = useState("rajeevp727@gmail.com");
-    const [password, setPassword] = useState("Pass123");
-    const roles = defaultRoles;
-    const [selectedRole, setSelectedRole] = useState(1);
-    const [error, setError] = useState("");
-    const { theme, toggleTheme } = useTheme();
-    const navigate = useNavigate();
 
-    useEffect(() => {
-        if (emailRef.current) emailRef.current.focus();
-    }, [isLogin]);
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const emailRef = useRef(null);
 
-    const submit = async (e) => {
-        e.preventDefault();
-        setError("");
+  const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState("rajeevp727@gmail.com");
+  const [password, setPassword] = useState("Pass123");
+  const [error, setError] = useState("");
 
-        try {
-            const res = await api.post("/Auth/login", { email, password });
-            login(res.data.token, res.data.refreshToken);
-        } catch (err) {
-            setError("Invalid credentials");
-        }
+  const [roles, setRoles] = useState(fallbackRoles);
+  const [selectedRole, setSelectedRole] = useState(1);
+
+  // focus input when mode changes
+  useEffect(() => {
+    emailRef.current?.focus();
+    setError("");
+  }, [isLogin]);
+
+  // load roles (optional API)
+  useEffect(() => {
+    const loadRoles = async () => {
+      try {
+        const res = await api.get("/meta/registration-roles");
+
+        if (res.data && res.data.length > 0)
+          setRoles(res.data);
+        else
+          setRoles(fallbackRoles);
+
+      } catch {
+        setRoles(fallbackRoles);
+      }
     };
 
-    return (
-        <div className="auth-wrapper">
-            <div className="theme-toggle">
-                <button type="button" onClick={(e) => {
-                    e.stopPropagation();
-                    toggleTheme();
-                }}
-                >
-                    {theme === "dark" ? "☀ Light" : "🌙 Dark"}
-                </button>
+    loadRoles();
+  }, []);
 
-            </div>
+  const handleSubmit = async e => {
+    e.preventDefault();
+    setError("");
 
-            <div className="auth-container">
+    try {
 
-                <div className="left-panel">
-                    <div className="overlay">
-                        <h2>{isLogin ? "Welcome!" : "Hello there!"}</h2>
-                        <p>{isLogin ? "Create your account for free" : "Already have an account?"}</p>
-                        <button className="switch-btn" onClick={() => setIsLogin(!isLogin)}>
-                            {isLogin ? "Sign Up" : "Login"}
-                        </button>
-                    </div>
-                </div>
+      if (isLogin) {
+        // LOGIN
+        const res = await api.post("/Auth/login", { email, password });
 
-                <div className="right-panel">
-                    <form className="form" onSubmit={submit}>
-                        <h2>{isLogin ? "Login" : "Sign Up"}</h2>
+        login(res.data.token, res.data.refreshToken);
 
-                        <input
-                            placeholder="Email address"
-                            ref={emailRef}
-                            value={email}
-                            onChange={e => setEmail(e.target.value)}
-                        />
+        navigate("/", { replace: true });
+      }
+      else {
+        // REGISTER
+        await api.post("/Auth/register", {
+          email,
+          password,
+          requestedRole: selectedRole
+        });
 
-                        <input
-                            type="password"
-                            placeholder="Password"
-                            value={password}
-                            onChange={e => setPassword(e.target.value)}
-                        />
+        setIsLogin(true);
+        setError("Account created. Please login.");
+      }
 
-                        {!isLogin && (
-                            <select
-                                className="role-select"
-                                value={selectedRole}
-                                onChange={e => setSelectedRole(Number(e.target.value))}
-                            >
-                                {roles.map(r => (
-                                    <option key={r.id} value={r.id}>{r.name}</option>
-                                ))}
-                            </select>
-                        )}
+    } catch (err) {
+      setError(err?.response?.data?.error || "Operation failed");
+    }
+  };
 
-                        {error && <div className="error">{error}</div>}
+  return (
+    <div className="auth-page">
 
-                        <button type="submit" className="submit-btn">
-                            {isLogin ? "Sign In" : "Create Account"}
-                        </button>
+      <div className="auth-card">
 
-                    </form>
-                </div>
+        {/* LEFT PANEL */}
+        <div className="auth-left">
+          <div className="auth-left-content">
+            <h1>{isLogin ? "Welcome Back" : "Join AssetForge"}</h1>
 
-            </div>
+            <p>
+              {isLogin
+                ? "Manage and track your business brands effortlessly."
+                : "Create an account and start managing your brands."}
+            </p>
+
+            <button
+              className="switch-mode"
+              onClick={() => setIsLogin(prev => !prev)}
+            >
+              {isLogin ? "Create Account" : "Sign In"}
+            </button>
+          </div>
         </div>
-    );
+
+        {/* RIGHT PANEL */}
+        <div className="auth-right">
+          <form className="auth-form" onSubmit={handleSubmit}>
+
+            <h2>{isLogin ? "Login" : "Register"}</h2>
+
+            <input
+              ref={emailRef}
+              placeholder="Email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+            />
+
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+            />
+
+            {!isLogin && (
+              <select
+                value={selectedRole}
+                onChange={e => setSelectedRole(Number(e.target.value))}
+              >
+                {roles.map(r => (
+                  <option key={r.id} value={r.id}>{r.name}</option>
+                ))}
+              </select>
+            )}
+
+            {error && <div className="auth-error">{error}</div>}
+
+            <button className="auth-submit">
+              {isLogin ? "Login" : "Create Account"}
+            </button>
+
+          </form>
+        </div>
+
+      </div>
+    </div>
+  );
 }
