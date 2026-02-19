@@ -6,9 +6,9 @@ import { ThemeProvider } from "./ThemeContext";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
-    <AuthProvider>
-        <ThemeProvider>
+    <ThemeProvider>
+        <AuthProvider>
             <App />
-        </ThemeProvider>
-    </AuthProvider>
+        </AuthProvider>
+    </ThemeProvider>
 );

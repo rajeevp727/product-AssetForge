@@ -1,19 +1,27 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Auth from "./Pages/Auth/Auth";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import PrivateRoute from "./Pages/Auth/PrivateRoute";
-import Dashboard from "./Pages/Dashboard/Dashboard";
 import Navbar from "./Pages/NavBar/Navbar";
+import Auth from "./Pages/Auth/Auth";
+import Dashboard from "./Pages/Dashboard/Dashboard";
 
-function App() {
+function AppLayout() {
+  const location = useLocation();
+
   return (
-    <BrowserRouter>
-      <Navbar />
+    <>
+      {location.pathname !== "/auth" && <Navbar />}
       <Routes>
         <Route path="/auth" element={<Auth />} />
         <Route path="/" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
       </Routes>
-    </BrowserRouter>
+    </>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AppLayout />
+    </BrowserRouter>
+  );
+}

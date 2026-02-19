@@ -3,6 +3,8 @@ import "./Auth.css";
 import api from "../../api/axios";
 import { useAuth } from "./AuthContext";
 import { useTheme } from "../../ThemeContext";
+import { useNavigate } from "react-router-dom";
+
 
 const defaultRoles = [
     { id: 1, name: "User" },
@@ -16,41 +18,32 @@ export default function Auth() {
     const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState("rajeevp727@gmail.com");
     const [password, setPassword] = useState("Pass123");
-    const [roles, setRoles] = useState([]);
+    const roles = defaultRoles;
     const [selectedRole, setSelectedRole] = useState(1);
     const [error, setError] = useState("");
     const { theme, toggleTheme } = useTheme();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (emailRef.current) emailRef.current.focus();
     }, [isLogin]);
 
-    useEffect(() => {
-        api.get("/meta/registration-roles")
-            .then(res => {
-                if (res.data && res.data.length > 0)
-                    setRoles(res.data);
-                else
-                    setRoles(defaultRoles);
-            })
-            .catch(() => {
-                setRoles(defaultRoles);
-            });
-    }, []);
-
-
     const submit = async (e) => {
         e.preventDefault();
+        e.stopPropagation();
         setError("");
 
         try {
             if (isLogin) {
                 const res = await api.post("/Auth/login", { email, password });
-                login(res.data.token);
-                window.location.href = "/";
-                setIsLogin(true);
-                setEmail("");
-                setPassword("");
+
+                login(res.data.Token, res.data.RefreshToken);
+
+                // attach token instantly so navbar requests don't 401
+                api.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`;
+
+                navigate("/", { replace: true });
+
             } else {
                 await api.post("/Auth/register", {
                     email,
@@ -62,16 +55,22 @@ export default function Auth() {
                 setError("Account created. Please login.");
             }
         } catch (err) {
-            setError(err.response?.data || "Server error");
+            setError(err.response?.data?.error || err.response?.data || "Server error");
         }
     };
+
 
     return (
         <div className="auth-wrapper">
             <div className="theme-toggle">
-                <button onClick={toggleTheme}>
-                    {theme === "dark" ? "🌙 Dark" : "☀️ Light"}
+                <button type="button" onClick={(e) => {
+                    e.stopPropagation();
+                    toggleTheme();
+                }}
+                >
+                    {theme === "dark" ? "☀ Light" : "🌙 Dark"}
                 </button>
+
             </div>
 
             <div className="auth-container">
@@ -110,22 +109,18 @@ export default function Auth() {
                                 value={selectedRole}
                                 onChange={e => setSelectedRole(Number(e.target.value))}
                             >
-                                {roles.length > 0
-                                    ? roles.map(r => (
-                                        <option key={r.id} value={r.id}>{r.name}</option>
-                                    ))
-                                    : defaultRoles.map(r => (
-                                        <option key={r.id} value={r.id}>{r.name}</option>
-                                    ))
-                                }
+                                {roles.map(r => (
+                                    <option key={r.id} value={r.id}>{r.name}</option>
+                                ))}
                             </select>
                         )}
 
                         {error && <div className="error">{error}</div>}
 
-                        <button className="submit-btn">
+                        <button type="submit" className="submit-btn">
                             {isLogin ? "Sign In" : "Create Account"}
                         </button>
+
                     </form>
                 </div>
 
