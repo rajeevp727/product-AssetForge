@@ -8,17 +8,16 @@ export default function Dashboard() {
     const [error, setError] = useState("");
     const [sort, setSort] = useState({ key: null, direction: "asc" });
     const [appInfo, setAppInfo] = useState(null);
+    const { loading, isAuthenticated } = useAuth();
 
     useEffect(() => {
+        if (loading || !isAuthenticated) return;
+
         api.get("/Brands/GetAllBrands")
             .then(res => setBrands(res.data || []))
-            .catch(err => {
-                if (err.response?.status === 401)
-                    setError("Session expired. Please login again.");
-                else
-                    setError("Unable to reach server");
-            });
-    }, []);
+            .catch(() => setError("Unable to reach server"));
+
+    }, [loading, isAuthenticated]);
 
     const sortedBrands = useMemo(() => {
 

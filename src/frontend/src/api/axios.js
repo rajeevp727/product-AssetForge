@@ -53,27 +53,22 @@ api.interceptors.response.use(
                         refreshToken: localStorage.getItem("refreshToken")
                     }
                 );
-
                 const newToken = refreshResponse.data.token;
                 const newRefresh = refreshResponse.data.refreshToken;
 
-                login(res.data.token, res.data.refreshToken);
-                api.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`;
+                localStorage.setItem("token", newToken);
+                localStorage.setItem("refreshToken", newRefresh);
 
-                api.defaults.headers.common["Authorization"] = "Bearer " + newToken;
+                api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
 
                 processQueue(null, newToken);
-
                 return api(originalRequest);
-
             } catch (refreshError) {
 
                 processQueue(refreshError, null);
 
                 localStorage.clear();
 
-                // Instead of redirecting immediately,
-                // emit logout event and let React handle navigation
                 window.dispatchEvent(new Event("auth:logout"));
 
                 return Promise.reject(refreshError);

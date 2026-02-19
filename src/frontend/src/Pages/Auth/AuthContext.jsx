@@ -1,51 +1,64 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import api from "../../api/axios";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
 
-    const [token, setToken] = useState(null);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [loading, setLoading] = useState(true);   // ⭐ IMPORTANT
+    const navigate = useNavigate();
 
+    const [token, setToken] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    const isAuthenticated = !!token;
+
+    // Load from storage once
     useEffect(() => {
         const stored = localStorage.getItem("token");
 
         if (stored) {
             setToken(stored);
-            setIsAuthenticated(true);
+            api.defaults.headers.common["Authorization"] = `Bearer ${stored}`;
         }
 
         setLoading(false);
 
-        // listen interceptor logout
-        const handleLogout = () => {
-            setToken(null);
-            setIsAuthenticated(false);
-        };
-
+        // axios logout event
+        const handleLogout = () => logout(false);
         window.addEventListener("auth:logout", handleLogout);
+
         return () => window.removeEventListener("auth:logout", handleLogout);
 
     }, []);
 
+    const login = (accessToken, refreshToken) => {
 
-    const login = (newToken, refreshToken) => {
-        login(res.data.token, res.data.refreshToken);
-        api.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`;
-        setToken(newToken);
-        setIsAuthenticated(true);
+        localStorage.setItem("token", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+
+        api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+
+        setToken(accessToken);
+
+        navigate("/", { replace: true });
     };
 
+    const logout = (redirect = true) => {
 
-    const logout = () => {
-        localStorage.clear();
+        localStorage.removeItem("token");
+        localStorage.removeItem("refreshToken");
+
+        delete api.defaults.headers.common["Authorization"];
+
         setToken(null);
-        setIsAuthenticated(false);
+
+        if (redirect)
+            navigate("/auth", { replace: true });
     };
 
     return (
-        <AuthContext.Provider value={{ token, isAuthenticated, login, logout, loading }}>
+        <AuthContext.Provider value={{ token, isAuthenticated, loading, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

@@ -30,35 +30,15 @@ export default function Auth() {
 
     const submit = async (e) => {
         e.preventDefault();
-        e.stopPropagation();
         setError("");
 
         try {
-            if (isLogin) {
-                const res = await api.post("/Auth/login", { email, password });
-
-                login(res.data.Token, res.data.RefreshToken);
-
-                // attach token instantly so navbar requests don't 401
-                api.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`;
-
-                navigate("/", { replace: true });
-
-            } else {
-                await api.post("/Auth/register", {
-                    email,
-                    password,
-                    requestedRole: selectedRole
-                });
-
-                setIsLogin(true);
-                setError("Account created. Please login.");
-            }
+            const res = await api.post("/Auth/login", { email, password });
+            login(res.data.token, res.data.refreshToken);
         } catch (err) {
-            setError(err.response?.data?.error || err.response?.data || "Server error");
+            setError("Invalid credentials");
         }
     };
-
 
     return (
         <div className="auth-wrapper">
