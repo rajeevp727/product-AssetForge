@@ -13,7 +13,7 @@ export default function Dashboard() {
   const sortableColumns = useMemo(() => ["userbase", "revenue"], []);
   const allowedColumns = useMemo(() => ["name", "userbase", "revenue", "createdAt"], []);
 
-  `useEffect`(() => {
+  useEffect(() => {
     let mounted = true;
     const load = async () => {
       try {
