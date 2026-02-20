@@ -16,7 +16,7 @@ namespace AssetForge.Infrastructure.Repositories
 
         public async Task<List<Brands>> GetAllBrandsAsync()
         {
-            return await _context.Brands.AsNoTracking().OrderBy(b => b.SortOrder).ToListAsync();
+            return await _context.Brands.AsNoTracking().Where(b=> b.SortOrder != 0).OrderBy(b => b.SortOrder).ThenBy(b=> b.SortOrder).ToListAsync();
         }
     }
 }

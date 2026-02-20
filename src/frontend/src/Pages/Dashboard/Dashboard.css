@@ -98,3 +98,24 @@
   color: #f87171;
   margin-bottom: 12px;
 }
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logout-btn {
+  padding: 8px 14px;
+  background: #e53935;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  background: #c62828;
+}
+.mono{
+    white-space: nowrap;
+}

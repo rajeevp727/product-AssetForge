@@ -38,7 +38,7 @@ namespace AssetForge.Infrastructure.Repositories
                 audience: _settings.Audience,
                 claims: claims,
                 notBefore: DateTime.UtcNow,
-                expires: DateTime.UtcNow.AddMinutes(1), // 1 mins
+                expires: DateTime.UtcNow.AddMinutes(10), // 10 mins
                 signingCredentials: creds
             );
 

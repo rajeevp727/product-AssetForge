@@ -30,7 +30,7 @@ namespace AssetForge.API.Controllers
         {
             var exists = await _repo.GetByEmailAsync(req.Email!);
             if (exists != null)
-                return BadRequest("Email already exists.");
+                return BadRequest("Email already exists, try again");
 
             var user = new Users
             {
@@ -73,7 +73,7 @@ namespace AssetForge.API.Controllers
             {
                 Token = accessToken,
                 RefreshToken = refreshToken,
-                ExpiresIn = 60 // 1 mins
+                ExpiresIn = 600 // 10 mins
             });
         }
 
@@ -124,7 +124,7 @@ namespace AssetForge.API.Controllers
             {
                 Token = newAccessToken,
                 RefreshToken = newRefreshToken,
-                ExpiresIn = 60 // 1 mins
+                ExpiresIn = 600 // 10 mins
             });
         }
     }

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import api from "../../api/axios";
 import "./Auth.css";
+import { parseApiError } from "../../utils/apiError";
 
 const fallbackRoles = [
   { id: 0, name: "Admin" },
@@ -54,14 +55,12 @@ export default function Auth() {
     setError("");
     try {
       if (isLogin) {
-        // LOGIN
-        const res = await api.post("Auth/login", { email, password });
+        const res = await api.post("api/Auth/login", { email, password });
         login(res.data.token, res.data.refreshToken);
         navigate("/", { replace: true });
       }
       else {
-        // REGISTER
-        await api.post("Auth/register", {
+        await api.post("api/Auth/register", {
           email,
           password,
           requestedRole: selectedRole
@@ -72,9 +71,7 @@ export default function Auth() {
 
     } catch (err) {
       console.error(err);
-      if (err?.response?.status === 401) setError("Invalid credentials");
-      else if (err?.response?.status === 400) setError("Email already in use");
-      else setError(err?.response?.data?.error || "Operation failed");
+      setError(parseApiError(err));
     }
   };
 

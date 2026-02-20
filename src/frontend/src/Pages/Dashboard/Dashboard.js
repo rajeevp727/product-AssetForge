@@ -10,17 +10,14 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [sort, setSort] = useState({ key: null, direction: "asc" });
 
-  /* ================= FETCH BRANDS ================= */
   useEffect(() => {
-
     let mounted = true;
-
     const load = async () => {
       try {
         setLoading(true);
         setError("");
 
-        const res = await api.get("/Brands/GetAllBrands");
+        const res = await api.get("api/Brands/GetAllBrands");
 
         if (!mounted) return;
 
@@ -42,40 +39,17 @@ export default function Dashboard() {
         if (mounted) setLoading(false);
       }
     };
-
     load();
 
     return () => { mounted = false };
 
   }, []);
 
-  /* ================= SORTING ================= */
-
-  const sortedBrands = useMemo(() => {
-
-    if (!sort.key) return brands;
-
-    return [...brands].sort((a, b) => {
-
-      let A = a[sort.key];
-      let B = b[sort.key];
-
-      if (A == null) return 1;
-      if (B == null) return -1;
-
-      const numA = Number(A);
-      const numB = Number(B);
-
-      if (!isNaN(numA) && !isNaN(numB))
-        return sort.direction === "asc" ? numA - numB : numB - numA;
-
-      return sort.direction === "asc"
-        ? String(A).localeCompare(String(B))
-        : String(B).localeCompare(String(A));
-
-    });
-
-  }, [brands, sort]);
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
+    window.location.href = "/auth";
+  }
 
   const requestSort = key => {
     setSort(prev => ({
@@ -90,40 +64,19 @@ export default function Dashboard() {
   const arrow = column =>
     sort.key !== column ? "↕" : sort.direction === "asc" ? "▲" : "▼";
 
-  /* ================= STATES ================= */
-
-  if (loading)
-    return (
-      <div className="dashboard">
-        <div className="dashboard-header">
-          <h1>Dashboard</h1>
-        </div>
-        <div className="center-state">Loading brands...</div>
-      </div>
-    );
-
-  if (error)
-    return (
-      <div className="dashboard">
-        <div className="dashboard-header">
-          <h1>Dashboard</h1>
-        </div>
-        <div className="error-text">{error}</div>
-      </div>
-    );
-
-  /* ================= UI ================= */
-
   return (
     <div className="dashboard">
 
       <div className="dashboard-header">
         <h1>Dashboard</h1>
+        <button className="logout-btn" onClick={handleLogout}>
+          Logout
+        </button>
       </div>
 
       <div className="table-card">
 
-        {sortedBrands.length === 0 ? (
+        {brands.length === 0 ? (
           <div className="empty-state">
             No brands found
           </div>
@@ -131,17 +84,17 @@ export default function Dashboard() {
 
           <table className="brands-table">
             <thead>
-              <tr>
+              <tr className="mono">
                 <th>Id</th>
                 <th>Name</th>
 
                 <th className="sortable"
-                    onClick={() => requestSort("userbase")}>
+                  onClick={() => requestSort("userbase")}>
                   User Base {arrow("userbase")}
                 </th>
 
                 <th className="sortable"
-                    onClick={() => requestSort("revenue")}>
+                  onClick={() => requestSort("revenue")}>
                   Revenue {arrow("revenue")}
                 </th>
 
@@ -151,7 +104,7 @@ export default function Dashboard() {
             </thead>
 
             <tbody>
-              {sortedBrands.map(b => (
+              {brands.map(b => (
                 <tr key={b.id}>
                   <td className="mono">{b.id}</td>
                   <td>{b.name ?? "-"}</td>
@@ -165,8 +118,8 @@ export default function Dashboard() {
                   <td>
                     {b.websiteUrl
                       ? <a href={b.websiteUrl} target="_blank" rel="noreferrer">
-                          Visit
-                        </a>
+                        Visit
+                      </a>
                       : "-"}
                   </td>
                 </tr>
