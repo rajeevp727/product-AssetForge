@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { use, useEffect, useState } from "react";
 import api from "../../api/axios";
 import "./Dashboard.css";
 
@@ -6,9 +6,12 @@ import "./Dashboard.css";
 export default function Dashboard() {
 
   const [brands, setBrands] = useState([]);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [, setError] = useState("");
+  const [, setLoading] = useState(true);
   const [sort, setSort] = useState({ key: null, direction: "asc" });
+  const [columns, setColumns] = useState([]);
+
+  const allowedColumns = ["name", "userbase", "revenue", "createdAt"];
 
   useEffect(() => {
     let mounted = true;
@@ -16,34 +19,35 @@ export default function Dashboard() {
       try {
         setLoading(true);
         setError("");
-
         const res = await api.get("api/Brands/GetAllBrands");
 
         if (!mounted) return;
-
-        if (Array.isArray(res.data))
+        if (Array.isArray(res.data) && res.data.length > 0) {
           setBrands(res.data);
-        else
+          const cols = Object.keys(res.data[0]).filter(key => allowedColumns.includes(key));
+          setColumns(cols);
+        } else {
           setBrands([]);
-
+          setColumns([]);
+        }
       } catch (err) {
-
         if (!mounted) return;
-
         if (err.response?.status === 401)
           setError("Session expired. Please login again.");
         else
           setError("Failed to load brands");
-
       } finally {
         if (mounted) setLoading(false);
       }
     };
     load();
-
     return () => { mounted = false };
-
   }, []);
+
+  const prettify = key =>
+    key
+      .replace(/([A-Z])/g, " $1")
+      .replace(/^./, s => s.toUpperCase());
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -85,41 +89,28 @@ export default function Dashboard() {
           <table className="brands-table">
             <thead>
               <tr className="mono">
-                <th>Id</th>
-                <th>Name</th>
-
-                <th className="sortable"
-                  onClick={() => requestSort("userbase")}>
-                  User Base {arrow("userbase")}
-                </th>
-
-                <th className="sortable"
-                  onClick={() => requestSort("revenue")}>
-                  Revenue {arrow("revenue")}
-                </th>
-
-                <th>Incorporated</th>
-                <th>Website</th>
+                {columns.map(col => (
+                  <th key={col} onClick={() => requestSort(col)}>
+                    {prettify(col)} {arrow(col)}
+                  </th>
+                ))}
               </tr>
             </thead>
 
             <tbody>
               {brands.map(b => (
                 <tr key={b.id}>
-                  <td className="mono">{b.id}</td>
-                  <td>{b.name ?? "-"}</td>
+                  <td>
+                    {b.websiteUrl
+                      ? <a href={b.websiteUrl} target="_blank" rel="noreferrer">
+                        <span className="brand-name">{b.name ?? "-"}</span>
+                      </a>
+                      : b.name ?? "-"}</td>
                   <td>{b.userbase ?? 0}</td>
                   <td>{b.revenue ?? 0}</td>
                   <td>
                     {b.createdAt
                       ? new Date(b.createdAt).toLocaleDateString()
-                      : "-"}
-                  </td>
-                  <td>
-                    {b.websiteUrl
-                      ? <a href={b.websiteUrl} target="_blank" rel="noreferrer">
-                        Visit
-                      </a>
                       : "-"}
                   </td>
                 </tr>

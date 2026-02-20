@@ -119,3 +119,8 @@
 .mono{
     white-space: nowrap;
 }
+.brand-name{
+    font-weight: 500;
+    text-decoration: underline;
+    color: #60a5fa;
+}
