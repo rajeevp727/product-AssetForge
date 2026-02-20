@@ -35,16 +35,23 @@ builder.Services.AddScoped<IJwtRepository, JwtRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
 
-builder.Services.AddCors(options =>
+bbuilder.Services.AddCors(options =>
 {
-    options.AddPolicy("react",
+    options.AddPolicy("frontend",
         policy =>
         {
-            policy.WithOrigins("http://localhost:3000")
-                .AllowAnyHeader()
-                .AllowAnyMethod();
+            policy.WithOrigins(
+                "https://assetforge.in",
+                "https://www.assetforge.in",
+                "http://localhost:3000"
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
         });
 });
+
+app.UseCors("frontend");
 
 var jwt = builder.Configuration.GetSection("Jwt").Get<JwtSettings>();
 
@@ -171,5 +178,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapGet("/", () => Results.Redirect("/swagger"));
 
 app.Run();
