@@ -119,8 +119,20 @@
 .mono{
     white-space: nowrap;
 }
-.brand-name{
-    font-weight: 500;
-    text-decoration: underline;
-    color: #60a5fa;
+
+/* normal link */
+.brand-name {
+  color: #1a73e8;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* hover */
+.brand-name:hover {
+  text-decoration: underline;
+}
+
+/* AFTER CLICK (visited) */
+a:visited .brand-name {
+  color: red;
 }
