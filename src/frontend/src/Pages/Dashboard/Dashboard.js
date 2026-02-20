@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import api from "../../api/axios";
 import "./Dashboard.css";
 
@@ -10,10 +10,10 @@ export default function Dashboard() {
   const [, setLoading] = useState(true);
   const [sort, setSort] = useState({ key: null, direction: "asc" });
   const [columns, setColumns] = useState([]);
+  const sortableColumns = useMemo(() => ["userbase", "revenue"], []);
+  const allowedColumns = useMemo(() => ["name", "userbase", "revenue", "createdAt"], []);
 
-  const allowedColumns = ["name", "userbase", "revenue", "createdAt"];
-
-  useEffect(() => {
+  `useEffect`(() => {
     let mounted = true;
     const load = async () => {
       try {
@@ -42,7 +42,7 @@ export default function Dashboard() {
     };
     load();
     return () => { mounted = false };
-  }, []);
+  }, [allowedColumns]);
 
   const prettify = key =>
     key
@@ -65,8 +65,15 @@ export default function Dashboard() {
     }));
   };
 
-  const arrow = column =>
-    sort.key !== column ? "↕" : sort.direction === "asc" ? "▲" : "▼";
+  const arrow = (column) => {
+    if (!sortableColumns.includes(column)) return "";   // no arrow
+
+    return sort.key !== column
+      ? "↕"
+      : sort.direction === "asc"
+        ? "▲"
+        : "▼";
+  };
 
   return (
     <div className="dashboard">

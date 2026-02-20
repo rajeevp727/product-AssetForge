@@ -106,7 +106,7 @@
 
 .logout-btn {
   padding: 8px 14px;
-  background: #e53935;
+  background: #000000;
   color: white;
   border: none;
   border-radius: 6px;
@@ -118,12 +118,12 @@
 }
 .mono{
     white-space: nowrap;
+    cursor: pointer;
 }
 
 /* normal link */
 .brand-name {
   color: #1a73e8;
-  text-decoration: none;
   cursor: pointer;
 }
 
@@ -135,4 +135,5 @@
 /* AFTER CLICK (visited) */
 a:visited .brand-name {
   color: red;
+  cursor: default;
 }

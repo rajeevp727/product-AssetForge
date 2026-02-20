@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/axios";
 
@@ -12,6 +12,28 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  // ---------- STABLE FUNCTIONS ----------
+  const logout = useCallback((redirect = true) => {
+    localStorage.clear();
+    delete api.defaults.headers.common["Authorization"];
+
+    setToken(null);
+    setIsAuthenticated(false);
+
+    if (redirect) navigate("/auth", { replace: true });
+  }, [navigate]);
+
+  const login = useCallback((newToken, refreshToken) => {
+    localStorage.setItem("token", newToken);
+    localStorage.setItem("refreshToken", refreshToken);
+
+    api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
+
+    setToken(newToken);
+    setIsAuthenticated(true);
+  }, []);
+
+  // ---------- EFFECT ----------
   useEffect(() => {
     const stored = localStorage.getItem("token");
 
@@ -27,27 +49,7 @@ export const AuthProvider = ({ children }) => {
     window.addEventListener("auth:logout", handleLogout);
 
     return () => window.removeEventListener("auth:logout", handleLogout);
-  }, []);
-
-  const login = (newToken, refreshToken) => {
-    localStorage.setItem("token", newToken);
-    localStorage.setItem("refreshToken", refreshToken);
-
-    api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
-
-    setToken(newToken);
-    setIsAuthenticated(true);
-  };
-
-  const logout = (redirect = true) => {
-    localStorage.clear();
-    delete api.defaults.headers.common["Authorization"];
-
-    setToken(null);
-    setIsAuthenticated(false);
-
-    if (redirect) navigate("/auth", { replace: true });
-  };
+  }, [logout]);
 
   return (
     <AuthContext.Provider value={{ token, isAuthenticated, login, logout, loading }}>
