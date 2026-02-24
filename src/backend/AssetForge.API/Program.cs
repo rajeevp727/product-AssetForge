@@ -35,7 +35,7 @@ builder.Services.AddScoped<IJwtRepository, JwtRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
 
-bbuilder.Services.AddCors(options =>
+builder.Services.AddCors(options =>
 {
     options.AddPolicy("frontend",
         policy =>
@@ -51,7 +51,6 @@ bbuilder.Services.AddCors(options =>
         });
 });
 
-app.UseCors("frontend");
 
 var jwt = builder.Configuration.GetSection("Jwt").Get<JwtSettings>();
 
@@ -161,9 +160,8 @@ builder.Services.AddSwaggerGen(Options =>
 
 
 var app = builder.Build();
-
 // Configure the HTTP request pipeline.
-
+app.UseCors("frontend");
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {

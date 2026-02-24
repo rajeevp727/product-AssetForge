@@ -137,3 +137,39 @@ a:visited .brand-name {
   color: red;
   cursor: default;
 }
+.auth-block {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f4f6f9;
+}
+
+.auth-card {
+  text-align: center;
+  padding: 40px 50px;
+  border-radius: 14px;
+  background: white;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  font-family: system-ui;
+}
+
+.auth-card h2 {
+  margin-bottom: 18px;
+  color: #333;
+}
+
+.auth-card button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  background: #1976d2;
+  color: white;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.auth-card button:hover {
+  background: #1258a8;
+}

@@ -2,7 +2,6 @@ import { useEffect, useState, useMemo } from "react";
 import api from "../../api/axios";
 import "./Dashboard.css";
 
-
 export default function Dashboard() {
 
   const [brands, setBrands] = useState([]);
@@ -12,16 +11,30 @@ export default function Dashboard() {
   const [columns, setColumns] = useState([]);
   const sortableColumns = useMemo(() => ["userbase", "revenue"], []);
   const allowedColumns = useMemo(() => ["name", "userbase", "revenue", "createdAt"], []);
+  const [unauthorized, setUnauthorized] = useState(false);
+
+  const isLoggedIn = () => {
+    const token = localStorage.getItem("token");
+    return !!token;
+  };
 
   useEffect(() => {
+    if (!isLoggedIn()) {
+      setUnauthorized(true);
+      return;
+    }
+
     let mounted = true;
+
     const load = async () => {
       try {
         setLoading(true);
         setError("");
-        const res = await api.get("api/Brands/GetAllBrands");
+
+        const res = await api.get("/api/Brands/GetAllBrands");
 
         if (!mounted) return;
+
         if (Array.isArray(res.data) && res.data.length > 0) {
           setBrands(res.data);
           const cols = Object.keys(res.data[0]).filter(key => allowedColumns.includes(key));
@@ -32,18 +45,21 @@ export default function Dashboard() {
         }
       } catch (err) {
         if (!mounted) return;
-        if (err.response?.status === 401)
-          setError("Session expired. Please login again.");
-        else
+
+        if (err.response?.status === 401) {
+          setUnauthorized(true);
+        } else {
           setError("Failed to load brands");
+        }
       } finally {
         if (mounted) setLoading(false);
       }
     };
+
     load();
     return () => { mounted = false };
-  }, [allowedColumns]);
 
+  }, [allowedColumns]);
   const prettify = key =>
     key
       .replace(/([A-Z])/g, " $1")
@@ -75,6 +91,18 @@ export default function Dashboard() {
         : "▼";
   };
 
+  if (unauthorized) {
+    return (
+      <div className="auth-block">
+        <div className="auth-card">
+          <h2>Please login to continue</h2>
+          <button onClick={() => window.location.href = "/auth"}>
+            Go to Login
+          </button>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="dashboard">
 
